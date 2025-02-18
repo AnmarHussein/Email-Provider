@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
-using ToolKit.Emails;
+using ToolKit.Emails.EmailSenders;
+using ToolKit.Emails.Services;
 
 namespace EmailProvider.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class WeatherForecastController(IEmailSender emailSender) : ControllerBase
+    public class WeatherForecastController(IEmailService emailService) : ControllerBase
     {
         private static readonly string[] Summaries = new[]
         {
@@ -14,9 +15,9 @@ namespace EmailProvider.Controllers
 
 
         [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
+        public async Task<IEnumerable<WeatherForecast>> Get()
         {
-            emailSender.SendAsync();
+            await emailService.SendEmailAsync();
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
