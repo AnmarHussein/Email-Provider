@@ -1,4 +1,6 @@
 ﻿using ToolKit.Emails.Dtos;
+using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
+using ToolKit.Emails.Utilities;
 
 namespace ToolKit.Emails.EmailBuilders;
 public class EmailBuilder
@@ -33,6 +35,12 @@ public class EmailBuilder
         _email.Body = body;
         _email.IsBodyHtml = isHtml;
         return this;
+    }    
+    
+    public EmailBuilder WithModel(object model)
+    {
+        _email.Model = model;
+        return this;
     }
 
     public EmailBuilder AddAttachment(EmailAttachment attachment)
@@ -46,6 +54,13 @@ public class EmailBuilder
         _email.Attachments.AddRange(attachments);
         return this;
     }
+    public EmailMessage Build() 
+    {
+        if(_email.HasModel)
+        {
+            _email.Body = TemplateParser.ReplacePlaceholders(_email.Body , _email.Model);
+        }
 
-    public EmailMessage Build() => _email;
+        return _email;
+    }
 }

@@ -47,11 +47,15 @@ public class MimeKitEmailSender : IEmailSender
             mimeMessage.Bcc.Add(MailboxAddress.Parse(bcc));
         }
 
+        await SendAsync(mimeMessage);
+    }
+
+    private async Task SendAsync(MimeMessage mimeMessage)
+    {
         using var client = new SmtpClient();
         await client.ConnectAsync(_emailSetting.Server , _emailSetting.Port);
         await client.AuthenticateAsync(_emailSetting.Username , _emailSetting.Password);
         await client.SendAsync(mimeMessage);
         await client.DisconnectAsync(true);
-
     }
 }

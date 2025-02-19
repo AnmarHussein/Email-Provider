@@ -16,8 +16,8 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddServices(this IServiceCollection services)
     {
         services.AddScoped<IEmailService , EmailService>();
-        services.AddScoped<IEmailSender, SmtpEmailSender>();
         services.AddScoped<IEmailSender, MimeKitEmailSender>();
+        services.AddScoped<IEmailSender, SmtpEmailSender>();
         return services; 
     }
 }
